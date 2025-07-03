@@ -8,12 +8,12 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Delete, Edit, Loader, Trash } from "lucide-react";
+import { Edit, Loader, Trash } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Link } from "react-router";
 
 const Books = () => {
   const { data, isLoading } = useGetBooksQuery(undefined);
-  console.log("🚀 ~ Books ~ data:", data);
 
   if (isLoading) {
     return (
@@ -27,9 +27,11 @@ const Books = () => {
     <div className="max-w-5xl mx-auto px-4 py-8">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold ">All Books</h1>
-        <Button className="bg-indigo-950 cursor-pointer hover:bg-indigo-800">
-          + Add New Book
-        </Button>
+        <Link to={"/create-book"}>
+          <Button className="bg-indigo-950 cursor-pointer hover:bg-indigo-800">
+            + Add New Book
+          </Button>
+        </Link>
       </div>
       <Table className="border border-gray-200 shadow-sm rounded-lg">
         <TableCaption className="text-gray-500">
