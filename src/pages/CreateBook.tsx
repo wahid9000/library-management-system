@@ -17,9 +17,12 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { z } from "zod";
-import { useForm } from "react-hook-form";
+import { useForm, type FieldValues, type SubmitHandler } from "react-hook-form";
 import { Textarea } from "@/components/ui/textarea";
 import { PlusIcon } from "lucide-react";
+import { useCreateBooksMutation } from "@/redux/api/bookApi";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router";
 
 const formSchema = z.object({
   title: z.string().min(2, {
@@ -39,6 +42,9 @@ const formSchema = z.object({
 });
 
 const CreateBook = () => {
+  const [createBooks, { data, isLoading, isError }] = useCreateBooksMutation();
+  const navigate = useNavigate();
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -51,9 +57,22 @@ const CreateBook = () => {
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
-  }
+  const onSubmit: SubmitHandler<FieldValues> = async (values) => {
+    const booksData = {
+      ...values,
+      copies: Number(values.copies),
+      available: true,
+    };
+
+    const res = await createBooks(booksData).unwrap();
+    if (res) {
+      form.reset();
+      toast("Book Created Successfully");
+      navigate("/books");
+    } else {
+      toast("Failed to create book");
+    }
+  };
 
   const genres = [
     "FICTION",
@@ -174,6 +193,7 @@ const CreateBook = () => {
                   </FormLabel>
                   <FormControl>
                     <Input
+                      type="number"
                       placeholder="Available copies"
                       {...field}
                       className="border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 bg-white rounded-lg p-3 shadow-sm transition-all duration-300"
@@ -209,7 +229,7 @@ const CreateBook = () => {
           {/* Submit Button */}
           <Button
             type="submit"
-            className="cursor-pointer w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 rounded-lg shadow-lg transition-all duration-300 text-lg"
+            className="cursor-pointer w-full bg-indigo-950 hover:bg-indigo-700 text-white font-semibold py-3 rounded-lg shadow-lg transition-all duration-300 text-lg"
           >
             <PlusIcon />
             Add Book

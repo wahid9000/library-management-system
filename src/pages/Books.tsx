@@ -8,7 +8,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Edit, Loader, Trash } from "lucide-react";
+import { Edit, Eye, Loader, Trash } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router";
 
@@ -69,8 +69,11 @@ const Books = () => {
               <TableCell>{book.available ? "Available" : "Stockout"}</TableCell>
               <TableCell>
                 <div className="flex justify-center items-center ">
+                  <Link to={`/books/${book._id}`}>
+                    <Eye className="text-black cursor-pointer rounded-full p-1 hover:bg-green-100 transition-all duration-300 hover:scale-110" />
+                  </Link>{" "}
                   <Edit className="text-green-900 cursor-pointer rounded-full p-1 hover:bg-green-100 transition-all duration-300 hover:scale-110" />
-                  <Trash className="text-red-900 cursor-pointer rounded-full p-1 hover:bg-red-100 transition-all duration-300 hover:scale-110 ml-2" />
+                  <Trash className="text-red-900 cursor-pointer rounded-full p-1 hover:bg-red-100 transition-all duration-300 hover:scale-110" />
                 </div>
               </TableCell>
             </TableRow>
