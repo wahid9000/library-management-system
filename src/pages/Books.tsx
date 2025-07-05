@@ -78,16 +78,6 @@ const Books = () => {
               <TableCell>
                 <div className="flex justify-center items-center space-x-2">
                   <TooltipProvider>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <Link to={`/books/${book._id}`}>
-                          <BookOpen className="text-black cursor-pointer rounded-full p-1 hover:bg-green-100 transition-all duration-300 hover:scale-110" />
-                        </Link>
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p>Borrow Book</p>
-                      </TooltipContent>
-                    </Tooltip>
                     {/* View */}
                     <Tooltip>
                       <TooltipTrigger asChild>
@@ -121,6 +111,18 @@ const Books = () => {
                       </TooltipTrigger>
                       <TooltipContent>
                         <p>Delete Book</p>
+                      </TooltipContent>
+                    </Tooltip>
+
+                    {/* Borrow Book */}
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Link to={`/books/${book._id}`}>
+                          <BookOpen className="text-black cursor-pointer rounded-full p-1 hover:bg-green-100 transition-all duration-300 hover:scale-110" />
+                        </Link>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>Borrow Book</p>
                       </TooltipContent>
                     </Tooltip>
                   </TooltipProvider>
