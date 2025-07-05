@@ -1,5 +1,5 @@
 import { useGetBooksQuery } from "@/redux/api/bookApi";
-import bannerImg from "@/assets/banner.png";
+// import bannerImg from "@/assets/banner.png";
 import {
   Card,
   CardContent,
@@ -22,7 +22,7 @@ const BookCards = () => {
     <>
       <div className="bg-indigo-950">
         <div className="w-[70%] mx-auto mb-12">
-          <img src={bannerImg} alt="Banner" />
+          <img src={"https://i.ibb.co/0RpGJvSz/banner.png"} alt="Banner" />
         </div>
       </div>
       <div>
