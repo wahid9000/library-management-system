@@ -1,3 +1,4 @@
+import { useLocation, useNavigate, useParams } from "react-router";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -16,13 +17,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { z } from "zod";
 import { useForm, type FieldValues, type SubmitHandler } from "react-hook-form";
+import z from "zod";
 import { Textarea } from "@/components/ui/textarea";
-import { PlusIcon } from "lucide-react";
-import { useCreateBooksMutation } from "@/redux/api/bookApi";
+import { useUpdateBookMutation } from "@/redux/api/bookApi";
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router";
 
 const formSchema = z.object({
   title: z.string().min(2, {
@@ -36,24 +35,28 @@ const formSchema = z.object({
   description: z.string().min(5, {
     message: "Description must be at least 5 characters.",
   }),
-  copies: z.string().min(1, {
-    message: "Minimum 1 copy is required.",
-  }),
+  copies: z.string(),
 });
 
-const CreateBook = () => {
-  const [createBooks] = useCreateBooksMutation();
+const EditBook = () => {
+  const params = useParams();
+  const id = params?.id;
+  const state = useLocation();
+  const bookInformation = state?.state?.book;
   const navigate = useNavigate();
 
+  const [updateBook] = useUpdateBookMutation();
+
+  const { title, description, genre, isbn, author, copies } = bookInformation;
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      title: "",
-      author: "",
-      genre: "",
-      isbn: "",
-      description: "",
-      copies: "",
+      title: title,
+      author: author,
+      genre: genre,
+      isbn: isbn,
+      description: description,
+      copies: String(copies),
     },
   });
 
@@ -61,13 +64,16 @@ const CreateBook = () => {
     const booksData = {
       ...values,
       copies: Number(values.copies),
-      available: true,
+      available: Number(values.copies) > 0 ? true : false,
     };
 
-    const res = await createBooks(booksData).unwrap();
+    const res = await updateBook({
+      id,
+      booksData,
+    });
     if (res) {
       form.reset();
-      toast("Book Created Successfully");
+      toast("Book Updated Successfully");
       navigate("/books");
     } else {
       toast("Failed to create book");
@@ -86,7 +92,7 @@ const CreateBook = () => {
   return (
     <div className="max-w-3xl mt-5 mx-auto p-8 bg-white shadow-2xl rounded-3xl">
       <h2 className="text-3xl font-bold mb-8 text-black  inline-block pb-2">
-        Create New Book
+        Edit Book
       </h2>
 
       <Form {...form}>
@@ -231,8 +237,7 @@ const CreateBook = () => {
             type="submit"
             className="cursor-pointer w-full bg-indigo-950 hover:bg-indigo-700 text-white font-semibold py-3 rounded-lg shadow-lg transition-all duration-300 text-lg"
           >
-            <PlusIcon />
-            Add Book
+            Edit Book
           </Button>
         </form>
       </Form>
@@ -240,4 +245,4 @@ const CreateBook = () => {
   );
 };
 
-export default CreateBook;
+export default EditBook;

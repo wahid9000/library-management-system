@@ -1,5 +1,11 @@
 import { useGetBooksQuery } from "@/redux/api/bookApi";
 import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import {
   Table,
   TableBody,
   TableCaption,
@@ -8,9 +14,11 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Edit, Eye, Loader, Trash } from "lucide-react";
+import { BookOpen, Edit, Eye, Loader } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router";
+import DeleteModal from "@/components/modals/DeleteModal";
+import type { IBook } from "@/types";
 
 const Books = () => {
   const { data, isLoading } = useGetBooksQuery(undefined);
@@ -59,7 +67,7 @@ const Books = () => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {data?.data?.map((book) => (
+          {data?.data?.map((book: IBook) => (
             <TableRow key={book._id} className="hover:bg-gray-50 transition">
               <TableCell className="font-medium">{book.title}</TableCell>
               <TableCell>{book.author}</TableCell>
@@ -68,12 +76,54 @@ const Books = () => {
               <TableCell>{book.copies}</TableCell>
               <TableCell>{book.available ? "Available" : "Stockout"}</TableCell>
               <TableCell>
-                <div className="flex justify-center items-center ">
-                  <Link to={`/books/${book._id}`}>
-                    <Eye className="text-black cursor-pointer rounded-full p-1 hover:bg-green-100 transition-all duration-300 hover:scale-110" />
-                  </Link>{" "}
-                  <Edit className="text-green-900 cursor-pointer rounded-full p-1 hover:bg-green-100 transition-all duration-300 hover:scale-110" />
-                  <Trash className="text-red-900 cursor-pointer rounded-full p-1 hover:bg-red-100 transition-all duration-300 hover:scale-110" />
+                <div className="flex justify-center items-center space-x-2">
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Link to={`/books/${book._id}`}>
+                          <BookOpen className="text-black cursor-pointer rounded-full p-1 hover:bg-green-100 transition-all duration-300 hover:scale-110" />
+                        </Link>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>Borrow Book</p>
+                      </TooltipContent>
+                    </Tooltip>
+                    {/* View */}
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Link to={`/books/${book._id}`}>
+                          <Eye className="text-black cursor-pointer rounded-full p-1 hover:bg-green-100 transition-all duration-300 hover:scale-110" />
+                        </Link>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>View Book</p>
+                      </TooltipContent>
+                    </Tooltip>
+
+                    {/* Edit */}
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Link to={`/edit-book/${book._id}`} state={{ book }}>
+                          <Edit className="text-green-900 cursor-pointer rounded-full p-1 hover:bg-green-100 transition-all duration-300 hover:scale-110" />
+                        </Link>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>Edit Book</p>
+                      </TooltipContent>
+                    </Tooltip>
+
+                    {/* Delete */}
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <div>
+                          <DeleteModal id={book._id} />
+                        </div>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>Delete Book</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
                 </div>
               </TableCell>
             </TableRow>
