@@ -5,28 +5,100 @@ import {
   NavigationMenuList,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
+import { BookCopy, Menu, X } from "lucide-react";
 import { Link } from "react-router";
+import { Button } from "../ui/button";
+import { useState } from "react";
 
 export function Navbar() {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   return (
-    <NavigationMenu viewport={false}>
-      <NavigationMenuList className="gap-5">
-        <NavigationMenuItem>
-          <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
-            <Link to="/">Home</Link>
-          </NavigationMenuLink>
-        </NavigationMenuItem>
-        <NavigationMenuItem>
-          <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
-            <Link to="/books">All Books</Link>
-          </NavigationMenuLink>
-        </NavigationMenuItem>
-        <NavigationMenuItem>
-          <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
-            <Link to="/borrow-summary">Borrow Summary</Link>
-          </NavigationMenuLink>
-        </NavigationMenuItem>
-      </NavigationMenuList>
-    </NavigationMenu>
+    <header className="flex items-center justify-between px-6 py-4 bg-white shadow-sm sticky top-0 z-50">
+      {/* Logo on the left */}
+      <div className="text-2xl font-bold text-indigo-950 flex justify-center items-center gap-2">
+        <BookCopy></BookCopy>BookBuddy
+      </div>
+
+      {/* Desktop Navigation on the right */}
+      <NavigationMenu viewport={false} className="hidden md:flex">
+        <NavigationMenuList className="gap-5">
+          <NavigationMenuItem>
+            <NavigationMenuLink
+              asChild
+              className={navigationMenuTriggerStyle()}
+            >
+              <Link to="/">Home</Link>
+            </NavigationMenuLink>
+          </NavigationMenuItem>
+          <NavigationMenuItem>
+            <NavigationMenuLink
+              asChild
+              className={navigationMenuTriggerStyle()}
+            >
+              <Link to="/books">All Books</Link>
+            </NavigationMenuLink>
+          </NavigationMenuItem>
+          <NavigationMenuItem>
+            <NavigationMenuLink
+              asChild
+              className={navigationMenuTriggerStyle()}
+            >
+              <Link to="/create-book">Add Books</Link>
+            </NavigationMenuLink>
+          </NavigationMenuItem>
+          <NavigationMenuItem>
+            <NavigationMenuLink
+              asChild
+              className={navigationMenuTriggerStyle()}
+            >
+              <Link to="/borrow-summary">Borrow Summary</Link>
+            </NavigationMenuLink>
+          </NavigationMenuItem>
+        </NavigationMenuList>
+      </NavigationMenu>
+
+      {/* Mobile Menu Icon */}
+      <div className="md:hidden relative">
+        <Button
+          size="icon"
+          variant="outline"
+          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          aria-label="Toggle menu"
+          aria-expanded={mobileMenuOpen}
+        >
+          {mobileMenuOpen ? (
+            <X className="h-5 w-5" />
+          ) : (
+            <Menu className="h-5 w-5" />
+          )}
+        </Button>
+
+        {mobileMenuOpen && (
+          <div className="absolute right-0 mt-2 w-40 bg-white border border-gray-200 rounded-md shadow-lg z-50">
+            <Link
+              to="/"
+              className="block px-4 py-2 hover:bg-indigo-100"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              Home
+            </Link>
+            <Link
+              to="/books"
+              className="block px-4 py-2 hover:bg-indigo-100"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              All Books
+            </Link>
+            <Link
+              to="/borrow-summary"
+              className="block px-4 py-2 hover:bg-indigo-100"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              Borrow Summary
+            </Link>
+          </div>
+        )}
+      </div>
+    </header>
   );
 }

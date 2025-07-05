@@ -64,13 +64,13 @@ const CreateBook = () => {
       available: true,
     };
 
-    const res = await createBooks(booksData).unwrap();
-    if (res) {
+    const res = await createBooks(booksData);
+    if (res?.data?.success) {
       form.reset();
-      toast("Book Created Successfully");
+      toast.success(res?.data?.message);
       navigate("/books");
     } else {
-      toast("Failed to create book");
+      toast.error(res?.error?.data?.message || "Something went wrong!!");
     }
   };
 
