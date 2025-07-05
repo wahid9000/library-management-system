@@ -6,15 +6,16 @@ import {
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
 import { BookCopy, Menu, X } from "lucide-react";
-import { Link } from "react-router";
+import { Link, useLocation } from "react-router";
 import { Button } from "../ui/button";
 import { useState } from "react";
+import { cn } from "@/lib/utils";
 
 export function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const {pathname} = useLocation();
   return (
     <header className="flex items-center justify-between px-6 py-4 bg-white shadow-sm sticky top-0 z-50">
-      {/* Logo on the left */}
       <div className="text-2xl font-bold text-indigo-950 flex justify-center items-center gap-2">
         <BookCopy></BookCopy>BookBuddy
       </div>
@@ -25,7 +26,10 @@ export function Navbar() {
           <NavigationMenuItem>
             <NavigationMenuLink
               asChild
-              className={navigationMenuTriggerStyle()}
+              className={cn(
+                navigationMenuTriggerStyle(),
+                pathname === "/" && "text-indigo-950 font-bold"
+              )}
             >
               <Link to="/">Home</Link>
             </NavigationMenuLink>
@@ -33,7 +37,10 @@ export function Navbar() {
           <NavigationMenuItem>
             <NavigationMenuLink
               asChild
-              className={navigationMenuTriggerStyle()}
+              className={cn(
+                navigationMenuTriggerStyle(),
+                pathname === "/books" && "text-indigo-950 font-bold"
+              )}
             >
               <Link to="/books">All Books</Link>
             </NavigationMenuLink>
@@ -41,7 +48,11 @@ export function Navbar() {
           <NavigationMenuItem>
             <NavigationMenuLink
               asChild
-              className={navigationMenuTriggerStyle()}
+              className={cn(
+                navigationMenuTriggerStyle(),
+                pathname === "/create-book" &&
+                  "text-indigo-950 font-bold"
+              )}
             >
               <Link to="/create-book">Add Books</Link>
             </NavigationMenuLink>
@@ -49,7 +60,11 @@ export function Navbar() {
           <NavigationMenuItem>
             <NavigationMenuLink
               asChild
-              className={navigationMenuTriggerStyle()}
+              className={cn(
+                navigationMenuTriggerStyle(),
+                pathname === "/borrow-summary" &&
+                  "text-indigo-950 font-bold"
+              )}
             >
               <Link to="/borrow-summary">Borrow Summary</Link>
             </NavigationMenuLink>

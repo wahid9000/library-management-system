@@ -6,12 +6,17 @@ import CreateBook from "@/pages/book/CreateBook";
 import EditBook from "@/pages/book/EditBook";
 import { createBrowserRouter } from "react-router";
 import CreateBorrow from "@/pages/borrow/CreateBorrow";
+import BookCards from "@/components/layout/BookCards";
 
 const router = createBrowserRouter([
   {
     path: "/",
     Component: App,
     children: [
+      {
+        path: "/",
+        element: <BookCards />,
+      },
       {
         path: "/books",
         element: <Books />,
