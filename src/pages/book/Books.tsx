@@ -14,11 +14,11 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { BookOpen, Edit, Eye, Loader } from "lucide-react";
+import { BookA, Edit, Eye, Loader } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router";
-import DeleteModal from "@/components/modals/DeleteModal";
 import type { IBook } from "@/types";
+import DeleteBookModal from "@/components/modals/DeleteBookModal";
 
 const Books = () => {
   const { data, isLoading } = useGetBooksQuery(undefined);
@@ -106,7 +106,7 @@ const Books = () => {
                     <Tooltip>
                       <TooltipTrigger asChild>
                         <div>
-                          <DeleteModal id={book._id} />
+                          <DeleteBookModal id={book._id} />
                         </div>
                       </TooltipTrigger>
                       <TooltipContent>
@@ -117,8 +117,11 @@ const Books = () => {
                     {/* Borrow Book */}
                     <Tooltip>
                       <TooltipTrigger asChild>
-                        <Link to={`/books/${book._id}`}>
-                          <BookOpen className="text-black cursor-pointer rounded-full p-1 hover:bg-green-100 transition-all duration-300 hover:scale-110" />
+                        <Link
+                          to={`/create-borrow/${book._id}`}
+                          state={{ book }}
+                        >
+                          <BookA className="text-black cursor-pointer rounded-full p-1 hover:bg-green-100 transition-all duration-300 hover:scale-110" />
                         </Link>
                       </TooltipTrigger>
                       <TooltipContent>

@@ -18,7 +18,7 @@ interface IDeleteProps {
   id: string;
 }
 
-const DeleteModal = ({ id }: IDeleteProps) => {
+const DeleteBookModal = ({ id }: IDeleteProps) => {
   const [deleteBook] = useDeleteBookMutation();
   const [open, setOpen] = useState(false);
 
@@ -56,4 +56,4 @@ const DeleteModal = ({ id }: IDeleteProps) => {
   );
 };
 
-export default DeleteModal;
+export default DeleteBookModal;
