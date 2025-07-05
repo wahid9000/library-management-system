@@ -18,14 +18,6 @@ const BookCards = () => {
   const { data, isLoading } = useGetBooksQuery(undefined);
   const bookData = data?.data;
 
-  if (isLoading) {
-    return (
-      <div className="flex justify-center items-center h-64">
-        <Loader className="animate-spin w-10 h-10 text-indigo-800" />
-      </div>
-    );
-  }
-
   return (
     <>
       <div className="bg-indigo-950">
@@ -40,62 +32,76 @@ const BookCards = () => {
           </span>
         </h2>
       </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto p-6">
-        {bookData?.map((book: IBook) => (
-          <Card key={book._id} className="shadow-lg border border-gray-200">
-            <CardHeader>
-              <CardTitle>{book.title}</CardTitle>
-              <CardDescription>{book.description}</CardDescription>
-            </CardHeader>
-
-            <CardContent>
-              <p>
-                <span className="font-semibold">Author:</span> {book.author}
-              </p>
-              <p>
-                <span className="font-semibold">Genre:</span> {book.genre}
-              </p>
-              <p>
-                <span className="font-semibold">ISBN:</span> {book.isbn}
-              </p>
-              <p>
-                <span className="font-semibold">Copies:</span> {book.copies}
-              </p>
-              <p
-                className={cn(
-                  "font-semibold",
-                  book.available ? "text-green-700" : "text-red-700"
-                )}
-              >
-                Status: {book.available ? "Available" : "Currently Unavailable"}
-              </p>
-            </CardContent>
-
-            <CardFooter className="justify-end gap-3">
-              <Link to={`/books/${book._id}`} state={{ book }}>
-                <Button className="cursor-pointer bg-indigo-900 hover:bg-indigo-800 text-white flex items-center">
-                  <Eye />
-                  <h4>View</h4>
-                </Button>
-              </Link>
-
-              <Button
-                disabled={!book.available}
-                className="cursor-pointer bg-indigo-900 hover:bg-indigo-800 text-white"
-              >
-                <Link
-                  className="flex justify-center items-center gap-2"
-                  to={`/create-borrow/${book._id}`}
-                  state={{ book }}
+      {isLoading ? (
+        <div className="flex justify-center items-center h-64">
+          <Loader className="animate-spin w-10 h-10 text-indigo-800" />
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto p-6">
+          {bookData && bookData.length > 0
+            ? bookData?.map((book: IBook) => (
+                <Card
+                  key={book._id}
+                  className="shadow-lg border border-gray-200"
                 >
-                  <BookA />
-                  Borrow
-                </Link>
-              </Button>
-            </CardFooter>
-          </Card>
-        ))}
-      </div>
+                  <CardHeader>
+                    <CardTitle>{book.title}</CardTitle>
+                    <CardDescription>{book.description}</CardDescription>
+                  </CardHeader>
+
+                  <CardContent>
+                    <p>
+                      <span className="font-semibold">Author:</span>{" "}
+                      {book.author}
+                    </p>
+                    <p>
+                      <span className="font-semibold">Genre:</span> {book.genre}
+                    </p>
+                    <p>
+                      <span className="font-semibold">ISBN:</span> {book.isbn}
+                    </p>
+                    <p>
+                      <span className="font-semibold">Copies:</span>{" "}
+                      {book.copies}
+                    </p>
+                    <p
+                      className={cn(
+                        "font-semibold",
+                        book.available ? "text-green-700" : "text-red-700"
+                      )}
+                    >
+                      Status:{" "}
+                      {book.available ? "Available" : "Currently Unavailable"}
+                    </p>
+                  </CardContent>
+
+                  <CardFooter className="justify-end gap-3">
+                    <Link to={`/books/${book._id}`} state={{ book }}>
+                      <Button className="cursor-pointer bg-indigo-900 hover:bg-indigo-800 text-white flex items-center">
+                        <Eye />
+                        <h4>View</h4>
+                      </Button>
+                    </Link>
+
+                    <Button
+                      disabled={!book.available}
+                      className="cursor-pointer bg-indigo-900 hover:bg-indigo-800 text-white"
+                    >
+                      <Link
+                        className="flex justify-center items-center gap-2"
+                        to={`/create-borrow/${book._id}`}
+                        state={{ book }}
+                      >
+                        <BookA />
+                        Borrow
+                      </Link>
+                    </Button>
+                  </CardFooter>
+                </Card>
+              ))
+            : "No books available"}
+        </div>
+      )}
     </>
   );
 };
