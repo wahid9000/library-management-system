@@ -63,14 +63,13 @@ const CreateBook = () => {
       copies: Number(values.copies),
       available: true,
     };
-
-    const res = await createBooks(booksData);
-    if (res?.data?.success) {
+    try {
+      const res = await createBooks(booksData).unwrap();
       form.reset();
-      toast.success(res?.data?.message);
+      toast.success(res.message);
       navigate("/books");
-    } else {
-      toast.error(res?.error?.data?.message || "Something went wrong!!");
+    } catch (error: any) {
+      toast.error(error?.data?.message || "Something went wrong!!");
     }
   };
 
