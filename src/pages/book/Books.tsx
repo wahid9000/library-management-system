@@ -35,7 +35,9 @@ const Books = () => {
   return (
     <div className="max-w-5xl mx-auto px-4 py-8">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold ">All Books</h1>
+        <h1 className="text-3xl font-bold ">
+          All Books - {data?.meta?.total || 0}
+        </h1>
         <Link to={"/create-book"}>
           <Button className="bg-indigo-950 cursor-pointer hover:bg-indigo-800">
             + Add New Book
@@ -44,7 +46,10 @@ const Books = () => {
       </div>
       <Table className="border border-gray-200 shadow-sm rounded-lg">
         <TableCaption className="text-gray-500">
-          A list of all available books.
+          <span>
+            A list of {data?.meta?.total || 0} available{" "}
+            {data?.meta?.total > 0 ? "books" : "book"}.
+          </span>
         </TableCaption>
         <TableHeader>
           <TableRow className="bg-gray-100">
