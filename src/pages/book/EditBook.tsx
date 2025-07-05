@@ -24,15 +24,16 @@ import { useUpdateBookMutation } from "@/redux/api/bookApi";
 import { toast } from "react-toastify";
 
 const formSchema = z.object({
-  title: z.string().min(2, {
+  title: z.string().trim().min(2, {
     message: "Title must be at least 2 characters.",
   }),
-  author: z.string().min(2, {
+  author: z.string().trim().min(2, {
     message: "Author must be at least 2 characters",
   }),
   genre: z.string(),
-  isbn: z.string(),
-  description: z.string().min(5, {
+  available: z.string(),
+  isbn: z.string().trim(),
+  description: z.string().trim().min(5, {
     message: "Description must be at least 5 characters.",
   }),
   copies: z.string(),
@@ -47,7 +48,8 @@ const EditBook = () => {
 
   const [updateBook] = useUpdateBookMutation();
 
-  const { title, description, genre, isbn, author, copies } = bookInformation;
+  const { title, description, genre, isbn, author, copies, available } =
+    bookInformation;
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -57,6 +59,7 @@ const EditBook = () => {
       isbn: isbn,
       description: description,
       copies: String(copies),
+      available: available ? "Available" : "Not Available",
     },
   });
 
@@ -64,19 +67,26 @@ const EditBook = () => {
     const booksData = {
       ...values,
       copies: Number(values.copies),
-      available: Number(values.copies) > 0 ? true : false,
+      available: values.available === "Available" ? true : false,
     };
 
-    const res = await updateBook({
-      id,
-      booksData,
-    });
-    if (res) {
+    if (booksData.copies == 0 && booksData.available) {
+      return toast.error(
+        "Please mark the book as 'Not Available' or increase the number of available copies."
+      );
+    }
+
+    try {
+      const res = await updateBook({
+        id,
+        booksData,
+      }).unwrap();
       form.reset();
-      toast("Book Updated Successfully");
+      toast.success(res.message);
       navigate("/books");
-    } else {
-      toast("Failed to create book");
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      toast.error(error?.data?.message || "Something went wrong!!");
     }
   };
 
@@ -88,7 +98,7 @@ const EditBook = () => {
     "BIOGRAPHY",
     "FANTASY",
   ];
-
+  const availability = ["Available", "Not Available"];
   return (
     <div className="max-w-3xl mt-5 mx-auto p-8 bg-white shadow-2xl rounded-3xl">
       <h2 className="text-3xl font-bold mb-8 text-black  inline-block pb-2">
@@ -160,6 +170,37 @@ const EditBook = () => {
                       {genres.map((genre) => (
                         <SelectItem key={genre} value={genre}>
                           {genre.replace("_", " ")}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="available"
+              render={({ field }) => (
+                <FormItem className="flex-1">
+                  <FormLabel className="text-base font-semibold text-gray-800">
+                    Availability
+                  </FormLabel>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Availability" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent className="text-black">
+                      {availability.map((avail) => (
+                        <SelectItem key={avail} value={avail}>
+                          {avail}
                         </SelectItem>
                       ))}
                     </SelectContent>

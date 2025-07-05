@@ -19,6 +19,7 @@ import { Button } from "@/components/ui/button";
 import { Link } from "react-router";
 import type { IBook } from "@/types";
 import DeleteBookModal from "@/components/modals/DeleteBookModal";
+import { cn } from "@/lib/utils";
 
 const Books = () => {
   const { data, isLoading } = useGetBooksQuery(undefined);
@@ -56,7 +57,7 @@ const Books = () => {
             <TableHead className="font-semibold text-gray-700">Genre</TableHead>
             <TableHead className="font-semibold text-gray-700">ISBN</TableHead>
             <TableHead className="font-semibold text-gray-700">
-              Available Copies
+              Copies
             </TableHead>
             <TableHead className="font-semibold text-gray-700">
               Availability
@@ -74,7 +75,16 @@ const Books = () => {
               <TableCell>{book.genre}</TableCell>
               <TableCell>{book.isbn}</TableCell>
               <TableCell>{book.copies}</TableCell>
-              <TableCell>{book.available ? "Available" : "Stockout"}</TableCell>
+              <TableCell>
+                <span
+                  className={cn(
+                    "font-medium",
+                    book.available ? "text-green-700" : "text-red-700"
+                  )}
+                >
+                  {book.available ? "Available" : "Currently Unavailable"}
+                </span>
+              </TableCell>
               <TableCell>
                 <div className="flex justify-center items-center space-x-2">
                   <TooltipProvider>
