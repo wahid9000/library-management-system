@@ -3,7 +3,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 export const bookApi = createApi({
   reducerPath: "bookApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: "http://localhost:5000/api",
+    baseUrl: "https://library-management-system-lemon-sigma.vercel.app/api",
   }),
   tagTypes: ["book"],
   endpoints: (builder) => ({
@@ -45,5 +45,5 @@ export const {
   useCreateBooksMutation,
   useGetBookQuery,
   useUpdateBookMutation,
-  useDeleteBookMutation
+  useDeleteBookMutation,
 } = bookApi;
