@@ -13,12 +13,14 @@ import { cn } from "@/lib/utils";
 
 export function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const {pathname} = useLocation();
+  const { pathname } = useLocation();
   return (
     <header className="flex items-center justify-between px-6 py-4 bg-white shadow-sm sticky top-0 z-50">
-      <div className="text-2xl font-bold text-indigo-950 flex justify-center items-center gap-2">
-        <BookCopy></BookCopy>BookBuddy
-      </div>
+      <Link to={"/"}>
+        <div className="text-2xl font-bold text-indigo-950 flex justify-center items-center gap-2">
+          <BookCopy></BookCopy>BookBuddy
+        </div>
+      </Link>
 
       {/* Desktop Navigation on the right */}
       <NavigationMenu viewport={false} className="hidden md:flex">
@@ -50,8 +52,7 @@ export function Navbar() {
               asChild
               className={cn(
                 navigationMenuTriggerStyle(),
-                pathname === "/create-book" &&
-                  "text-indigo-950 font-bold"
+                pathname === "/create-book" && "text-indigo-950 font-bold"
               )}
             >
               <Link to="/create-book">Add Books</Link>
@@ -62,8 +63,7 @@ export function Navbar() {
               asChild
               className={cn(
                 navigationMenuTriggerStyle(),
-                pathname === "/borrow-summary" &&
-                  "text-indigo-950 font-bold"
+                pathname === "/borrow-summary" && "text-indigo-950 font-bold"
               )}
             >
               <Link to="/borrow-summary">Borrow Summary</Link>
