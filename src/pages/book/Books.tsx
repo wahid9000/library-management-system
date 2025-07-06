@@ -22,7 +22,9 @@ import DeleteBookModal from "@/components/modals/DeleteBookModal";
 import { cn } from "@/lib/utils";
 
 const Books = () => {
-  const { data, isLoading } = useGetBooksQuery(undefined);
+  const { data, isLoading } = useGetBooksQuery(undefined, {
+    refetchOnMountOrArgChange: true,
+  });
 
   if (isLoading) {
     return (
