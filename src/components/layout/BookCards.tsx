@@ -1,5 +1,4 @@
 import { useGetBooksQuery } from "@/redux/api/bookApi";
-// import bannerImg from "@/assets/banner.png";
 import {
   Card,
   CardContent,
@@ -8,11 +7,18 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { BookA, Eye, Loader } from "lucide-react";
+import {
+  Tooltip,
+  TooltipTrigger,
+  TooltipContent,
+  TooltipProvider,
+} from "@/components/ui/tooltip";
+import { Eye, Hand, Loader, Pencil } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router";
 import { cn } from "@/lib/utils";
 import type { IBook } from "@/types";
+import Banner from "./Banner";
 
 const BookCards = () => {
   const { data, isLoading } = useGetBooksQuery(undefined);
@@ -20,11 +26,7 @@ const BookCards = () => {
 
   return (
     <>
-      <div className="bg-indigo-950">
-        <div className="w-[70%] mx-auto mb-12">
-          <img src={"https://i.ibb.co/0RpGJvSz/banner.png"} alt="Banner" />
-        </div>
-      </div>
+      <Banner />
       <div>
         <h2 className="text-5xl font-bold text-center  ">
           <span className="border-b-4 text-indigo-950 border-indigo-950 pb-6 inline-block">
@@ -41,11 +43,13 @@ const BookCards = () => {
           {bookData?.map((book: IBook) => (
             <Card key={book._id} className="shadow-lg border border-gray-200">
               <CardHeader>
-                <CardTitle>{book.title}</CardTitle>
-                <CardDescription>{book.description}</CardDescription>
+                <CardTitle className="font-bold">{book.title}</CardTitle>
+                <CardDescription className="text-sm">
+                  {book.description}
+                </CardDescription>
               </CardHeader>
 
-              <CardContent>
+              <CardContent className="text-sm">
                 <p>
                   <span className="font-semibold">Author:</span> {book.author}
                 </p>
@@ -69,28 +73,58 @@ const BookCards = () => {
                 </p>
               </CardContent>
 
-              <CardFooter className="justify-end gap-3">
-                <Link to={`/books/${book._id}`} state={{ book }}>
-                  <Button className="cursor-pointer bg-indigo-900 hover:bg-indigo-800 text-white flex items-center">
-                    <Eye />
-                    <h4>View</h4>
-                  </Button>
-                </Link>
+              <TooltipProvider>
+                <CardFooter className="justify-end gap-3">
+                  {/* View Button */}
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Link to={`/books/${book._id}`} state={{ book }}>
+                        <Button className="cursor-pointer bg-indigo-900 hover:bg-indigo-800 text-white flex items-center p-2">
+                          <Eye size={18} />
+                        </Button>
+                      </Link>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>View Book</p>
+                    </TooltipContent>
+                  </Tooltip>
 
-                <Button
-                  disabled={!book.available}
-                  className="cursor-pointer bg-indigo-900 hover:bg-indigo-800 text-white"
-                >
-                  <Link
-                    className="flex justify-center items-center gap-2"
-                    to={`/create-borrow/${book._id}`}
-                    state={{ book }}
-                  >
-                    <BookA />
-                    Borrow
-                  </Link>
-                </Button>
-              </CardFooter>
+                  {/* Edit Button */}
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Link to={`/edit-book/${book._id}`} state={{ book }}>
+                        <Button className="cursor-pointer bg-indigo-900 hover:bg-indigo-800 text-white flex items-center p-2">
+                          <Pencil size={18} />
+                        </Button>
+                      </Link>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Edit Book</p>
+                    </TooltipContent>
+                  </Tooltip>
+
+                  {/* Borrow Button */}
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button
+                        disabled={!book.available}
+                        className="cursor-pointer bg-indigo-900 hover:bg-indigo-800 text-white p-2"
+                      >
+                        <Link
+                          className="flex justify-center items-center"
+                          to={`/create-borrow/${book._id}`}
+                          state={{ book }}
+                        >
+                          <Hand size={18} />
+                        </Link>
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Borrow Book</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </CardFooter>
+              </TooltipProvider>
             </Card>
           ))}
         </div>
